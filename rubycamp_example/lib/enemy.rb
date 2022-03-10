@@ -9,10 +9,11 @@ class Enemy
 		y ||= rand(10) / 10.0 + 1
 		z ||= rand(10) / 10.0 + 3
 		pos = Mittsu::Vector3.new(x, y, -z)
-		texture = Mittsu::ImageUtils.load_texture('images/house.png')
-		self.mesh = MeshFactory.create_enemy(r: 0.3, map:texture)
+		texture = Mittsu::ImageUtils.load_texture('images/gost_simple_red.png')
+		self.mesh = MeshFactory.create_enemy(r: 0.25, map:texture)
 		self.mesh.position = pos
 		self.expired = false
+		mesh.rotate_y(-90)
 	end
 
 	# メッシュの現在位置を返す
