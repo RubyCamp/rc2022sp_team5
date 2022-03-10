@@ -4,14 +4,14 @@ class MeshFactory
 	# 弾丸の生成
 	def self.create_bullet(r: 0.1, div_w: 16, div_h: 16, color: nil, map: nil, normal_map: nil)
 		geometry = Mittsu::SphereGeometry.new(r, div_w, div_h)
-		material = generate_material(:basic, color, map, normal_map)
+		material = generate_material(:phong, color, map, normal_map)
 		Mittsu::Mesh.new(geometry, material)
 	end
 
 	# 敵キャラクタの生成
 	def self.create_enemy(r: 0.1, div_w: 16, div_h: 16, color: nil, map: nil, normal_map: nil)
 		geometry = Mittsu::SphereGeometry.new(r, div_w, div_h)
-		material = generate_material(:basic, color, map, normal_map)
+		material = generate_material(:phong, color, map, normal_map)
 		Mittsu::Mesh.new(geometry, material)
 	end
 
@@ -31,6 +31,34 @@ class MeshFactory
 			TextureFactory.create_texture_map("desert.png"),
 			TextureFactory.create_normal_map("desert-normal.png"))
 		Mittsu::Mesh.new(geometry, material)
+	end
+
+	# 戦車の生成 
+	def self.create_tank(scene, camera)
+		loader = Mittsu::OBJMTLLoader.new
+		object = loader.load('tank/tank.obj', 'tank.mtl')
+		object.print_tree
+
+		tank = Mittsu::Object3D.new
+		body, wheels, turret, tracks, barrel = object.children.map { |o| o.children.first }
+		object.children.each do |o|
+		o.children.first.material.metal = true
+		end
+		[body, wheels, tracks].each do |o|
+		tank.add(o)
+		end
+
+		turret.position.set(0.0, 0.17, -0.17)
+		tank.add(turret)
+
+		barrel.position.set(0.0, 0.05, 0.2)
+		turret.add(barrel)
+
+		tank.rotation.y = Math::PI
+
+		barrel.add(camera)
+
+		return tank, turret, barrel
 	end
 
 	# 汎用マテリアル生成メソッド
