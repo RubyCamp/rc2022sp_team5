@@ -9,6 +9,7 @@ module Directors
 		MOVE_SPEED = 0.05
 		MOUSE_SENSITIVITY = 0.005
 		BULLET_SPEAD = 0.3
+		ENEMY_MAX = 10
 
 
 		# 初期化
@@ -55,7 +56,7 @@ module Directors
 			rejected_enemies.each{|enemy| self.scene.remove(enemy.mesh) }
 
 			# 一定のフレーム数経過毎に敵キャラを出現させる
-			if @frame_counter % 60 == 0
+			if @frame_counter % 60 == 0 && @enemies.length < ENEMY_MAX
 				enemy = Enemy.new
 				@enemies << enemy
 				self.scene.add(enemy.mesh)
