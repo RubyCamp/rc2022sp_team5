@@ -65,8 +65,8 @@ module Directors
 			self.camera.rotate_y(-CAMERA_ROTATE_SPEED_Y) if self.renderer.window.key_down?(GLFW_KEY_D)
 			self.camera.rotate_z(CAMERA_ROTATE_SPEED_Z) if self.renderer.window.key_down?(GLFW_KEY_Q)
 			self.camera.rotate_z(-CAMERA_ROTATE_SPEED_Z) if self.renderer.window.key_down?(GLFW_KEY_E)
-			self.camera.position.x -= 0.05 if self.renderer.window.key_down?(GLFW_KEY_RIGHT)
-			self.camera.position.x += 0.05 if self.renderer.window.key_down?(GLFW_KEY_LEFT)
+			self.camera.position.x += 0.05 if self.renderer.window.key_down?(GLFW_KEY_RIGHT)
+			self.camera.position.x -= 0.05 if self.renderer.window.key_down?(GLFW_KEY_LEFT)
 		end
 
 		# キー押下（単発）時のハンドリング
@@ -110,7 +110,7 @@ module Directors
 					puts "Hit! #{@cnt}"
 					bullet.expired = true
 					enemy.expired = true
-					if @cnt>=5
+					if @cnt>=10
 						puts "シーン遷移 → EndingDirector"
 						transition_to_next_director
 						break
