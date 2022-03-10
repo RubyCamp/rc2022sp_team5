@@ -54,9 +54,8 @@ class MeshFactory
 		barrel.position.set(0.0, 0.05, 0.2)
 		turret.add(barrel)
 
-=begin
 		geometry = Mittsu::PlaneGeometry.new(0.25, 0.25)
-		texture_map = Mittsu::ImageUtils.load_texture("images/ファイル名.png")
+		texture_map = Mittsu::ImageUtils.load_texture("images/kurahashi-sann.png")
 		material = Mittsu::MeshBasicMaterial.new(map: texture_map)
 		mesh = Mittsu::Mesh.new(geometry, material)
 		mesh.position.y = 0.15
@@ -64,7 +63,6 @@ class MeshFactory
 		mesh.rotation.x = Math::PI/3
 		mesh.rotation.y = Math::PI
 		turret.add(mesh)
-=end
 
 		tank.rotation.y = Math::PI
 
