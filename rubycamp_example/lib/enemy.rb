@@ -3,14 +3,13 @@ class Enemy
 	attr_accessor :mesh, :expired
 
 	# 初期化
-	def initialize(x: nil, y: nil, z: nil)
-		# 初期位置指定が無ければランダムに配置する
-		x ||= rand(100) / 10.0 - 0.5
-		y ||= rand(10) / 10.0 + 1
-		z ||= rand(10) / 10.0 + 3
+	def initialize(radius)
+		x = rand(30) - 15
+		y = rand(2) + 3
+		z = rand(30) - 15
 		pos = Mittsu::Vector3.new(x, y, -z)
 		texture = Mittsu::ImageUtils.load_texture('images/house.png')
-		self.mesh = MeshFactory.create_enemy(r: 0.3, map:texture)
+		self.mesh = MeshFactory.create_enemy(r: radius, map:texture)
 		self.mesh.position = pos
 		self.expired = false
 	end
@@ -26,16 +25,16 @@ class Enemy
 		dy = rand(3)
 		case dx
 		when 1
-			self.mesh.position.x += 0.03
+			self.mesh.position.x += 0.05
 		when 2
-			self.mesh.position.x -= 0.03
+			self.mesh.position.x -= 0.05
 		end
 
 		case dy
 		when 1
-			self.mesh.position.y += 0.03
+			self.mesh.position.y += 0.02
 		when 2
-			self.mesh.position.y -= 0.03
+			self.mesh.position.y -= 0.02
 		end
 	end
 end
