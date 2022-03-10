@@ -3,7 +3,7 @@ require_relative 'base'
 module Directors
 	# ゲーム本編のディレクター
 	class GameDirector < Base
-		MOVE_SPEED = 0.05
+		TANK_SPEED = 0.05
 		MOUSE_SENSITIVITY = 0.005
 		BULLET_SPEAD = 0.3
 		ENEMY_MAX = 10
@@ -64,10 +64,11 @@ module Directors
 
 			@frame_counter += 1
 
-			drive_tank(MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_W)
-			drive_tank(-MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_S)
-			turn_tank(MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_A)
-			turn_tank(-MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_D)
+			# 移動処理
+			drive_tank(TANK_SPEED) if self.renderer.window.key_down?(GLFW_KEY_W)
+			drive_tank(-TANK_SPEED) if self.renderer.window.key_down?(GLFW_KEY_S)
+			turn_tank(TANK_SPEED) if self.renderer.window.key_down?(GLFW_KEY_A)
+			turn_tank(-TANK_SPEED) if self.renderer.window.key_down?(GLFW_KEY_D)
 		end
 
 		# マウスで視点操作
@@ -191,6 +192,7 @@ module Directors
 				Mittsu::ImageUtils.load_texture('images/gost_shadow_black.png')
 			]
 
+			# 視点操作の処理
 			move_rotate()
 		end
 

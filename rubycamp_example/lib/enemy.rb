@@ -20,7 +20,7 @@ class Enemy
 	end
 
 	# 1フレーム分の進行処理
-	def play(position)
+	def play(tank_position)
 		dx = rand(3)
 		dy = rand(3)
 		case dx
@@ -37,7 +37,8 @@ class Enemy
 			self.mesh.position.y -= 0.02
 		end
 
-		self.mesh.look_at(position)
+		# 常に戦車を見る
+		self.mesh.look_at(tank_position)
 		self.mesh.rotate_y(Math::PI*3/2)
 	end
 end
