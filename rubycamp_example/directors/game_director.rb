@@ -66,16 +66,7 @@ module Directors
 			end
 
 			@frame_counter += 1
-=begin
-			self.camera.rotate_x(CAMERA_ROTATE_SPEED_X) if self.renderer.window.key_down?(GLFW_KEY_W)
-			self.camera.rotate_x(-CAMERA_ROTATE_SPEED_X) if self.renderer.window.key_down?(GLFW_KEY_S)
-			self.camera.rotate_y(CAMERA_ROTATE_SPEED_Y) if self.renderer.window.key_down?(GLFW_KEY_A)
-			self.camera.rotate_y(-CAMERA_ROTATE_SPEED_Y) if self.renderer.window.key_down?(GLFW_KEY_D)
-			self.camera.rotate_z(CAMERA_ROTATE_SPEED_Z) if self.renderer.window.key_down?(GLFW_KEY_Q)
-			self.camera.rotate_z(-CAMERA_ROTATE_SPEED_Z) if self.renderer.window.key_down?(GLFW_KEY_E)
-			self.camera.position.x -= 0.05 if self.renderer.window.key_down?(GLFW_KEY_RIGHT)
-			self.camera.position.x += 0.05 if self.renderer.window.key_down?(GLFW_KEY_LEFT)
-=end
+
 			drive_tank(MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_W)
 			drive_tank(-MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_S)
 			turn_tank(MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_A)
@@ -137,6 +128,15 @@ module Directors
 				# Escキーで強制終了
 				when GLFW_KEY_ESCAPE
 					exit
+			end
+		end
+
+		# ボタン押下（単発）時のハンドリング
+		def on_mouse_button_pressed(glfw_mouse_button:)
+			case glfw_mouse_button
+				# 左クリックで弾丸を発射
+				when GLFW_MOUSE_BUTTON_LEFT
+					shoot
 			end
 		end
 
