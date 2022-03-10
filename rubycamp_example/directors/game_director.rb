@@ -3,9 +3,6 @@ require_relative 'base'
 module Directors
 	# ゲーム本編のディレクター
 	class GameDirector < Base
-		CAMERA_ROTATE_SPEED_X = 0.015
-		CAMERA_ROTATE_SPEED_Y = 0.015
-		CAMERA_ROTATE_SPEED_Z = 0.015
 		MOVE_SPEED = 0.05
 		MOUSE_SENSITIVITY = 0.005
 		BULLET_SPEAD = 0.3
@@ -190,15 +187,6 @@ module Directors
 
 			# 敵のテクスチャを読み込む
 			@texture = Mittsu::ImageUtils.load_texture('images/gost_simple_red.png')
-
-=begin
-			geometry = Mittsu::PlaneGeometry.new(1, 1, 1, 1)
-			texture = Mittsu::ImageUtils.load_texture('images/alpha-island_up.png')
-            material = Mittsu::MeshBasicMaterial.new(map: texture)
-			mesh = Mittsu::Mesh.new(geometry, material)
-			mesh.position.z = -10
-			scene.add(mesh)
-=end
 
 			move_rotate()
 		end
