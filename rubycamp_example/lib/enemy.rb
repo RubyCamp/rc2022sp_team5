@@ -3,13 +3,12 @@ class Enemy
 	attr_accessor :mesh, :expired
 
 	# 初期化
-	def initialize(radius)
+	def initialize(radius, texture)
 		x = rand(30) - 15
 		y = rand(2) + 3
 		z = rand(30) - 15
 		pos = Mittsu::Vector3.new(x, y, -z)
-		texture = Mittsu::ImageUtils.load_texture('images/gost_simple_red.png')
-		self.mesh = MeshFactory.create_enemy(r: 0.25, map:texture)
+		self.mesh = MeshFactory.create_enemy(r: radius, map:texture)
 		self.mesh.position = pos
 		self.expired = false
 		mesh.rotate_y(-90)
