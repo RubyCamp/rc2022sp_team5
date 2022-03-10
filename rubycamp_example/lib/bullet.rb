@@ -8,7 +8,7 @@ class Bullet
 	# 初期化
 	# 進行方向を表す単位ベクトルを受領する
 	def initialize(camera)
-		self.mesh = MeshFactory.create_bullet(r: 0.02, color: 0xff0000)
+		self.mesh = MeshFactory.create_bullet(r: 0.1, color: 0x000000)
 		#TODO 球の位置とカメラ位置を合わせる  
 		self.position.x = camera.position.x
 		f = Mittsu::Vector4.new(0, 0, 1, 0)

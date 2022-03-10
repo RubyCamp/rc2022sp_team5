@@ -108,13 +108,6 @@ module Directors
 			
 			skybox = Mittsu::Mesh.new(Mittsu::BoxGeometry.new(100, 100, 100), skybox_material)
 			scene.add(skybox)
-
-			geometry = Mittsu::PlaneGeometry.new(1, 1, 1, 1)
-			texture = Mittsu::ImageUtils.load_texture('images/alpha-island_up.png')
-            material = Mittsu::MeshBasicMaterial.new(map: texture)
-			mesh = Mittsu::Mesh.new(geometry, material)
-			mesh.position.z = -10
-			scene.add(mesh)
 		end
 
 		# 弾丸発射
