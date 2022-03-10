@@ -76,8 +76,6 @@ module Directors
 			drive_tank(-MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_S)
 			turn_tank(MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_A)
 			turn_tank(-MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_D)
-
-					
 		end
 
 		# マウスで視点操作
