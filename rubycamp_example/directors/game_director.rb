@@ -10,6 +10,8 @@ module Directors
 		MOUSE_SENSITIVITY = 0.005
 		BULLET_SPEAD = 0.3
 		ENEMY_MAX = 10
+		ENEMY_RADIUS = 0.5
+		BULLET_RADIUS = 0.1
 
 
 		# 初期化
@@ -57,7 +59,7 @@ module Directors
 
 			# 一定のフレーム数経過毎に敵キャラを出現させる
 			if @frame_counter % 60 == 0 && @enemies.length < ENEMY_MAX
-				enemy = Enemy.new
+				enemy = Enemy.new(ENEMY_RADIUS)
 				@enemies << enemy
 				self.scene.add(enemy.mesh)
 			end
@@ -149,15 +151,14 @@ module Directors
 			@spot_light = LightFactory.create_spot_light
 			self.scene.add(@spot_light)
 
+			# 地面
 			@earth = MeshFactory.create_earth
-			@earth.position.y = -0.9
-			@earth.position.z = -0.8
+			@earth.position.y = -0.5
 			self.scene.add(@earth)
 
 			# 戦車を生成して配置
 			@tank, @turret, @barrel = MeshFactory.create_tank(self.scene, self.camera)
 			@temporary_tank = Mittsu::Object3D.new
-			#@tank.position.set(0, 0, 0)
 			self.scene.add(@tank)
 
 			self.camera.position.z = -3.0
@@ -165,6 +166,7 @@ module Directors
 			self.camera.rotation.y = Math::PI
 			self.camera.rotation.x = Math::PI/6.0
 
+			# 背景
 			cube_map_texture = Mittsu::ImageUtils.load_texture_cube(
 				[ 'rt', 'lf', 'up', 'dn', 'bk', 'ft' ].map { |path|
 				"images/alpha-island_#{path}.png"
@@ -185,12 +187,14 @@ module Directors
 			skybox = Mittsu::Mesh.new(Mittsu::BoxGeometry.new(100, 100, 100), skybox_material)
 			scene.add(skybox)
 
+=begin
 			geometry = Mittsu::PlaneGeometry.new(1, 1, 1, 1)
 			texture = Mittsu::ImageUtils.load_texture('images/alpha-island_up.png')
             material = Mittsu::MeshBasicMaterial.new(map: texture)
 			mesh = Mittsu::Mesh.new(geometry, material)
 			mesh.position.z = -10
 			scene.add(mesh)
+=end
 
 			move_rotate()
 		end
@@ -208,7 +212,7 @@ module Directors
 			f.multiply_scalar(BULLET_SPEAD)
 
 			# 弾丸オブジェクト生成
-			bullet = Bullet.new(f, @temporary_tank.position)
+			bullet = Bullet.new(f, @temporary_tank.position, BULLET_RADIUS)
 			self.scene.add(bullet.mesh)
 			@bullets << bullet
 		end
@@ -220,7 +224,7 @@ module Directors
 			@enemies.each do |enemy|
 				next if enemy.expired
 				distance = bullet.position.distance_to(enemy.position)
-				if distance < 0.2
+				if distance < ENEMY_RADIUS + BULLET_RADIUS
 					@cnt = @cnt + 1
 					puts "Hit! #{@cnt}"
 					bullet.expired = true

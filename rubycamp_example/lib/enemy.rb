@@ -3,13 +3,12 @@ class Enemy
 	attr_accessor :mesh, :expired
 
 	# 初期化
-	def initialize(x: nil, y: nil, z: nil)
-		# 初期位置指定が無ければランダムに配置する
-		x ||= rand(30) - 15
-		y ||= rand(2) + 3
-		z ||= rand(30) - 15
+	def initialize(radius)
+		x = rand(30) - 15
+		y = rand(2) + 3
+		z = rand(30) - 15
 		pos = Mittsu::Vector3.new(x, y, -z)
-		self.mesh = MeshFactory.create_enemy(r: 0.2, color: 0x00ff00)
+		self.mesh = MeshFactory.create_enemy(r: radius, color: 0x00ff00)
 		self.mesh.position = pos
 		self.expired = false
 	end
