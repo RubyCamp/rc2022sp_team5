@@ -45,7 +45,7 @@ module Directors
 			@bullets.each(&:play)
 
 			# 現在登場済みの敵を一通り動かす
-			@enemies.each(&:play)
+			@enemies.each{|enemy| enemy.play(@temporary_tank.position)}
 
 			# 各弾丸について当たり判定実施
 			@bullets.each{|bullet| hit_any_enemies(bullet) }

@@ -11,7 +11,6 @@ class Enemy
 		self.mesh = MeshFactory.create_enemy(r: radius, map:texture)
 		self.mesh.position = pos
 		self.expired = false
-		mesh.rotate_y(-90)
 	end
 
 	# メッシュの現在位置を返す
@@ -20,7 +19,7 @@ class Enemy
 	end
 
 	# 1フレーム分の進行処理
-	def play
+	def play(position)
 		dx = rand(3)
 		dy = rand(3)
 		case dx
@@ -36,5 +35,8 @@ class Enemy
 		when 2
 			self.mesh.position.y -= 0.02
 		end
+
+		self.mesh.look_at(position)
+		self.mesh.rotate_y(Math::PI*3/2)
 	end
 end
