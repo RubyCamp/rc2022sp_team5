@@ -92,6 +92,33 @@ module Directors
 			@earth.position.y = -0.9
 			@earth.position.z = -0.8
 			self.scene.add(@earth)
+
+			cube_map_texture = Mittsu::ImageUtils.load_texture_cube(
+				[ 'rt', 'lf', 'up', 'dn', 'bk', 'ft' ].map { |path|
+				"images/alpha-island_#{path}.png"
+				}
+			)
+			
+			shader = Mittsu::ShaderLib[:cube]
+			shader.uniforms['tCube'].value = cube_map_texture
+			
+			skybox_material = Mittsu::ShaderMaterial.new({
+				fragment_shader: shader.fragment_shader,
+				vertex_shader: shader.vertex_shader,
+				uniforms: shader.uniforms,
+				depth_write: false,
+				side: Mittsu::BackSide
+			})
+			
+			skybox = Mittsu::Mesh.new(Mittsu::BoxGeometry.new(100, 100, 100), skybox_material)
+			scene.add(skybox)
+
+			geometry = Mittsu::PlaneGeometry.new(1, 1, 1, 1)
+			texture = Mittsu::ImageUtils.load_texture('images/alpha-island_up.png')
+            material = Mittsu::MeshBasicMaterial.new(map: texture)
+			mesh = Mittsu::Mesh.new(geometry, material)
+			mesh.position.z = -10
+			scene.add(mesh)
 		end
 
 		# 弾丸発射
