@@ -29,6 +29,10 @@ module Directors
 		def on_key_pressed(glfw_key:)
 		end
 
+		# ボタンのキー押下（単発）時のイベントハンドラ
+		def on_mouse_button_pressed(glfw_mouse_button:)
+		end
+
 		# 次のシーンに遷移する
 		# current_directorを次のシーンの担当ディレクターオブジェクトに差し替える。
 		# メインループ側でcurrent_directorを毎フレーム参照しているので、これによって次のフレーム描画から
