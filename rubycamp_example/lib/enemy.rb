@@ -8,7 +8,8 @@ class Enemy
 		y = rand(2) + 3
 		z = rand(30) - 15
 		pos = Mittsu::Vector3.new(x, y, -z)
-		self.mesh = MeshFactory.create_enemy(r: radius, color: 0x00ff00)
+		texture = Mittsu::ImageUtils.load_texture('images/house.png')
+		self.mesh = MeshFactory.create_enemy(r: radius, map:texture)
 		self.mesh.position = pos
 		self.expired = false
 	end
