@@ -18,6 +18,11 @@ renderer.window.on_key_pressed do |glfw_key|
 	director.on_key_pressed(glfw_key: glfw_key)
 end
 
+# ボタン押下時のイベントハンドラを登録
+renderer.window.on_mouse_button_pressed  do |glfw_mouse_button|
+	director.on_mouse_button_pressed(glfw_mouse_button: glfw_mouse_button)
+end
+
 # メインループ
 renderer.window.run do
 	# 現在のディレクターオブジェクトに、処理対象となるディレクターオブジェクトを返させる

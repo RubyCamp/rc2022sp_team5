@@ -3,10 +3,7 @@ require_relative 'base'
 module Directors
 	# ゲーム本編のディレクター
 	class GameDirector < Base
-		CAMERA_ROTATE_SPEED_X = 0.015
-		CAMERA_ROTATE_SPEED_Y = 0.015
-		CAMERA_ROTATE_SPEED_Z = 0.015
-		MOVE_SPEED = 0.05
+		TANK_SPEED = 0.05
 		MOUSE_SENSITIVITY = 0.005
 		BULLET_SPEAD = 0.3
 		ENEMY_MAX = 10
@@ -45,7 +42,7 @@ module Directors
 			@bullets.each(&:play)
 
 			# 現在登場済みの敵を一通り動かす
-			@enemies.each(&:play)
+			@enemies.each{|enemy| enemy.play(@temporary_tank.position)}
 
 			# 各弾丸について当たり判定実施
 			@bullets.each{|bullet| hit_any_enemies(bullet) }
@@ -60,26 +57,18 @@ module Directors
 
 			# 一定のフレーム数経過毎に敵キャラを出現させる
 			if @frame_counter % 60 == 0 && @enemies.length < ENEMY_MAX
-				enemy = Enemy.new(ENEMY_RADIUS, @texture)
+				enemy = Enemy.new(ENEMY_RADIUS, @enemy_textures)
 				@enemies << enemy
 				self.scene.add(enemy.mesh)
 			end
 
 			@frame_counter += 1
-=begin
-			self.camera.rotate_x(CAMERA_ROTATE_SPEED_X) if self.renderer.window.key_down?(GLFW_KEY_W)
-			self.camera.rotate_x(-CAMERA_ROTATE_SPEED_X) if self.renderer.window.key_down?(GLFW_KEY_S)
-			self.camera.rotate_y(CAMERA_ROTATE_SPEED_Y) if self.renderer.window.key_down?(GLFW_KEY_A)
-			self.camera.rotate_y(-CAMERA_ROTATE_SPEED_Y) if self.renderer.window.key_down?(GLFW_KEY_D)
-			self.camera.rotate_z(CAMERA_ROTATE_SPEED_Z) if self.renderer.window.key_down?(GLFW_KEY_Q)
-			self.camera.rotate_z(-CAMERA_ROTATE_SPEED_Z) if self.renderer.window.key_down?(GLFW_KEY_E)
-			self.camera.position.x -= 0.05 if self.renderer.window.key_down?(GLFW_KEY_RIGHT)
-			self.camera.position.x += 0.05 if self.renderer.window.key_down?(GLFW_KEY_LEFT)
-=end
-			drive_tank(MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_W)
-			drive_tank(-MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_S)
-			turn_tank(MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_A)
-			turn_tank(-MOVE_SPEED) if self.renderer.window.key_down?(GLFW_KEY_D)
+
+			# 移動処理
+			drive_tank(TANK_SPEED) if self.renderer.window.key_down?(GLFW_KEY_W)
+			drive_tank(-TANK_SPEED) if self.renderer.window.key_down?(GLFW_KEY_S)
+			turn_tank(TANK_SPEED) if self.renderer.window.key_down?(GLFW_KEY_A)
+			turn_tank(-TANK_SPEED) if self.renderer.window.key_down?(GLFW_KEY_D)
 		end
 
 		# マウスで視点操作
@@ -140,6 +129,15 @@ module Directors
 			end
 		end
 
+		# ボタン押下（単発）時のハンドリング
+		def on_mouse_button_pressed(glfw_mouse_button:)
+			case glfw_mouse_button
+				# 左クリックで弾丸を発射
+				when GLFW_MOUSE_BUTTON_LEFT
+					shoot
+			end
+		end
+
 		private
 
 		# ゲーム本編の登場オブジェクト群を生成
@@ -189,17 +187,12 @@ module Directors
 			scene.add(skybox)
 
 			# 敵のテクスチャを読み込む
-			@texture = Mittsu::ImageUtils.load_texture('images/gost_simple_red.png')
+			@enemy_textures = [
+				Mittsu::ImageUtils.load_texture('images/gost_simple_red.png'),
+				Mittsu::ImageUtils.load_texture('images/gost_shadow_black.png')
+			]
 
-=begin
-			geometry = Mittsu::PlaneGeometry.new(1, 1, 1, 1)
-			texture = Mittsu::ImageUtils.load_texture('images/alpha-island_up.png')
-            material = Mittsu::MeshBasicMaterial.new(map: texture)
-			mesh = Mittsu::Mesh.new(geometry, material)
-			mesh.position.z = -10
-			scene.add(mesh)
-=end
-
+			# 視点操作の処理
 			move_rotate()
 		end
 
@@ -235,7 +228,7 @@ module Directors
 					bullet.expired = true
 					enemy.expired = true
 					
-					if @cnt>=1
+					if @cnt>=10
 						puts "シーン遷移 → EndingDirector"
 						transition_to_next_director
 						break
