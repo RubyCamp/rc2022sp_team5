@@ -28,11 +28,12 @@ module Directors
 
 			#敵を倒した数の初期化
 			@cnt = 0
+
+			$cnt_sc = 0
 		end
 
 		# １フレーム分の進行処理
 		def play
-
 			# 現在発射済みの弾丸を一通り動かす
 			@bullets.each(&:play)
 
@@ -96,6 +97,7 @@ module Directors
 			bullet = Bullet.new(camera)
 			self.scene.add(bullet.mesh)
 			@bullets << bullet
+			$cnt_sc += 1
 		end
 
 		# 弾丸と敵の当たり判定
@@ -110,7 +112,8 @@ module Directors
 					puts "Hit! #{@cnt}"
 					bullet.expired = true
 					enemy.expired = true
-					if @cnt>=10
+					
+					if @cnt>=1
 						puts "シーン遷移 → EndingDirector"
 						transition_to_next_director
 						break
