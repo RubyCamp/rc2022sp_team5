@@ -57,7 +57,7 @@ module Directors
 
 			# 一定のフレーム数経過毎に敵キャラを出現させる
 			if @frame_counter % 60 == 0 && @enemies.length < ENEMY_MAX
-				enemy = Enemy.new(ENEMY_RADIUS, @texture)
+				enemy = Enemy.new(ENEMY_RADIUS, @enemy_textures)
 				@enemies << enemy
 				self.scene.add(enemy.mesh)
 			end
@@ -186,7 +186,10 @@ module Directors
 			scene.add(skybox)
 
 			# 敵のテクスチャを読み込む
-			@texture = Mittsu::ImageUtils.load_texture('images/gost_simple_red.png')
+			@enemy_textures = [
+				Mittsu::ImageUtils.load_texture('images/gost_simple_red.png'),
+				Mittsu::ImageUtils.load_texture('images/gost_shadow_black.png')
+			]
 
 			move_rotate()
 		end
