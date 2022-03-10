@@ -3,9 +3,9 @@ require_relative 'base'
 module Directors
 	# ゲーム本編のディレクター
 	class GameDirector < Base
-		CAMERA_ROTATE_SPEED_X = 0.01
-		CAMERA_ROTATE_SPEED_Y = 0.01
-		CAMERA_ROTATE_SPEED_Z = 0.01
+		CAMERA_ROTATE_SPEED_X = 0.015
+		CAMERA_ROTATE_SPEED_Y = 0.015
+		CAMERA_ROTATE_SPEED_Z = 0.015
 
 		# 初期化
 		def initialize(screen_width:, screen_height:, renderer:)
@@ -25,6 +25,9 @@ module Directors
 
 			# 現在のフレーム数をカウントする
 			@frame_counter = 0
+
+			#敵を倒した数の初期化
+			@cnt = 0
 		end
 
 		# １フレーム分の進行処理
@@ -48,7 +51,7 @@ module Directors
 			rejected_enemies.each{|enemy| self.scene.remove(enemy.mesh) }
 
 			# 一定のフレーム数経過毎に敵キャラを出現させる
-			if @frame_counter % 180 == 0
+			if @frame_counter % 60 == 0
 				enemy = Enemy.new
 				@enemies << enemy
 				self.scene.add(enemy.mesh)
@@ -62,17 +65,13 @@ module Directors
 			self.camera.rotate_y(-CAMERA_ROTATE_SPEED_Y) if self.renderer.window.key_down?(GLFW_KEY_D)
 			self.camera.rotate_z(CAMERA_ROTATE_SPEED_Z) if self.renderer.window.key_down?(GLFW_KEY_Q)
 			self.camera.rotate_z(-CAMERA_ROTATE_SPEED_Z) if self.renderer.window.key_down?(GLFW_KEY_E)
-
+			self.camera.position.x -= 0.05 if self.renderer.window.key_down?(GLFW_KEY_RIGHT)
+			self.camera.position.x += 0.05 if self.renderer.window.key_down?(GLFW_KEY_LEFT)
 		end
 
 		# キー押下（単発）時のハンドリング
 		def on_key_pressed(glfw_key:)
 			case glfw_key
-				# ESCキー押下でエンディングに無理やり遷移
-				when GLFW_KEY_ESCAPE
-					puts "シーン遷移 → EndingDirector"
-					transition_to_next_director
-
 				# SPACEキー押下で弾丸を発射
 				when GLFW_KEY_SPACE
 					shoot
@@ -83,11 +82,8 @@ module Directors
 
 		# ゲーム本編の登場オブジェクト群を生成
 		def create_objects
-			# 太陽光をセット
 			@sun = LightFactory.create_sun_light
 			self.scene.add(@sun)
-
-			# 地球を作成し、カメラ位置（原点）に対して大気圏を飛行してるっぽく見える位置に移動させる
 			@earth = MeshFactory.create_earth
 			@earth.position.y = -0.9
 			@earth.position.z = -0.8
@@ -123,13 +119,8 @@ module Directors
 
 		# 弾丸発射
 		def shoot
-			# 現在カメラが向いている方向を進行方向とし、進行方向に対しBullet::SPEED分移動する単位単位ベクトルfを作成する
-			f = Mittsu::Vector4.new(0, 0, 1, 0)
-			f.apply_matrix4(self.camera.matrix).normalize
-			f.multiply_scalar(Bullet::SPEED)
-
 			# 弾丸オブジェクト生成
-			bullet = Bullet.new(f)
+			bullet = Bullet.new(camera)
 			self.scene.add(bullet.mesh)
 			@bullets << bullet
 		end
@@ -142,9 +133,15 @@ module Directors
 				next if enemy.expired
 				distance = bullet.position.distance_to(enemy.position)
 				if distance < 0.2
-					puts "Hit!"
+					@cnt = @cnt + 1
+					puts "Hit! #{@cnt}"
 					bullet.expired = true
 					enemy.expired = true
+					if @cnt>=5
+						puts "シーン遷移 → EndingDirector"
+						transition_to_next_director
+						break
+					end
 				end
 			end
 		end

@@ -2,14 +2,19 @@
 class Bullet
 	attr_accessor :mesh, :expired
 
-	SPEED = -0.05 # 弾丸の速度
+	SPEED = -0.3 # 弾丸の速度
 	FRAME_COUNT_UPPER_LIMIT = 3 * 60
 
 	# 初期化
 	# 進行方向を表す単位ベクトルを受領する
-	def initialize(forward_vector)
+	def initialize(camera)
 		self.mesh = MeshFactory.create_bullet(r: 0.02, color: 0xff0000)
-		@forward_vector = forward_vector
+		#TODO 球の位置とカメラ位置を合わせる  
+		self.position.x = camera.position.x
+		f = Mittsu::Vector4.new(0, 0, 1, 0)
+		f.apply_matrix4(camera.matrix).normalize
+		f.multiply_scalar(Bullet::SPEED)
+		@forward_vector = f
 		@forwarded_frame_count = 0 # 何フレーム分進行したかを記憶するカウンタ
 		self.expired = false
 	end
