@@ -1,4 +1,3 @@
-# 敵キャラクタ
 class Enemy
 	attr_accessor :mesh, :expired
 
