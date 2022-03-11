@@ -4,7 +4,7 @@ class Enemy
 	# 初期化
 	def initialize(radius, textures)
 		x = rand(30) - 15
-		y = rand(3) + 3
+		y = rand(2) + 3
 		z = rand(30) - 15
 		pos = Mittsu::Vector3.new(x, y, -z)
 		index = rand(2)
