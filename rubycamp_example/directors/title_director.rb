@@ -38,6 +38,7 @@ module Directors
 
     # タイトル画面の登場オブジェクト群を生成
     def create_objects
+      create_title_background
       # 太陽光をセット
       @sun = LightFactory.create_sun_light
       self.scene.add(@sun)
@@ -58,8 +59,8 @@ module Directors
       # 説明文字列用のパネル作成
       # タイトル画面表示開始から180フレーム経過で表示するように調整
       # 位置は適当に決め打ち
-      @description = Panel.new(width: 1, height: 0.25, start_frame: 180, map: TextureFactory.create_title_description)
-      @description.mesh.position.y = -0.2
+      @description = Panel.new(width: 1, height: 0.25, start_frame: 120, map: TextureFactory.create_title_description)
+      @description.mesh.position.y = -0.25
       @description.mesh.position.z = -0.5
       self.scene.add(@description.mesh)
     end
@@ -70,9 +71,15 @@ module Directors
       panel = AnimatedPanel.new(start_frame: 30 + delay_frames, duration: 120, map: TextureFactory.create_string(char))
       panel.mesh.position.x = x_pos
       panel.mesh.position.z = -0.5
-      self.scene.add(panel.mesh)
+      # self.scene.add(panel.mesh)
       @panels ||= []
       @panels << panel
+    end
+
+    def create_title_background()
+      mesh = MeshFactory.create_panel(width: 1.8, height: 1.5, map: TextureFactory.create_title_background)
+      mesh.position.z = -1
+      self.scene.add(mesh)
     end
   end
 end

@@ -1,15 +1,14 @@
-# 敵キャラクタ
 class Enemy
 	attr_accessor :mesh, :expired
 
 	# 初期化
-	def initialize(x: nil, y: nil, z: nil)
-		# 初期位置指定が無ければランダムに配置する
-		x ||= rand(100) / 10.0 - 0.5
-		y ||= rand(10) / 10.0 + 1
-		z ||= rand(10) / 10.0 + 3
+	def initialize(radius, textures)
+		x = rand(30) - 15
+		y = rand(3) + 3
+		z = rand(30) - 15
 		pos = Mittsu::Vector3.new(x, y, -z)
-		self.mesh = MeshFactory.create_enemy(r: 0.2, color: 0x00ff00)
+		index = rand(2)
+		self.mesh = MeshFactory.create_enemy(r: radius, map:textures[index])
 		self.mesh.position = pos
 		self.expired = false
 	end
@@ -20,21 +19,25 @@ class Enemy
 	end
 
 	# 1フレーム分の進行処理
-	def play
+	def play(tank_position)
 		dx = rand(3)
 		dy = rand(3)
 		case dx
 		when 1
-			self.mesh.position.x += 0.03
+			self.mesh.position.x += 0.1
 		when 2
-			self.mesh.position.x -= 0.03
+			self.mesh.position.x -= 0.1
 		end
 
 		case dy
 		when 1
-			self.mesh.position.y += 0.03
+			self.mesh.position.y += 0.02
 		when 2
-			self.mesh.position.y -= 0.03
+			self.mesh.position.y -= 0.02
 		end
+
+		# 常に戦車を見る
+		self.mesh.look_at(tank_position)
+		self.mesh.rotate_y(Math::PI*3/2)
 	end
 end
